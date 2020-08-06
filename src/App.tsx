@@ -1,10 +1,16 @@
 import React from 'react';
+import styled from "@emotion/styled/macro"
 import logo from './logo.svg';
 import './App.css';
+
+const CButton = styled.button(`
+  color: red;
+`)
 
 function App() {
   return (
     <div className="App">
+      <CButton>test</CButton>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>

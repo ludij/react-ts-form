@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -20,7 +22,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint-ts": "yarn eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint-ts": "yarn eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint-css": "stylelint **/*.tsx && stylelint **/*.css"
   },
   "eslintConfig": {
     "extends": [
@@ -29,7 +32,15 @@
       "prettier/react"
     ],
     "plugins": [
-      "prettier"
+      "prettier",
+      "emotion"
+    ]
+  },
+  "stylelint": {
+    "processors": ["stylelint-processor-styled-components"],
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-styled-components"
     ]
   },
   "browserslist": {
@@ -45,8 +56,15 @@
     ]
   },
   "devDependencies": {
+    "babel-plugin-emotion": "^10.0.33",
     "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-emotion": "^10.0.27",
     "eslint-plugin-prettier": "^3.1.4",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "stylelint": "^13.6.1",
+    "stylelint-config-standard": "^20.0.0",
+    "stylelint-config-styled-components": "^0.1.1",
+    "stylelint-processor-styled-components": "^1.10.0",
+    "typescript-styled-plugin": "^0.15.0"
   }
 }
