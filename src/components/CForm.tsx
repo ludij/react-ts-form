@@ -23,17 +23,19 @@ const CErrorMessage = styled.p(`
     font-family: Arial;
 `)
 
-type CFormProps = {
+interface CFormRadioOptions {
+  label: string
+  value: string
+  checked?: boolean
+}
+
+interface CFormProps {
   formFields: {
     type: string
     label: string
     name: string
-    value: string
-    options?: {
-        label: string
-        name: string
-        value: string
-    }[]
+    value?: string
+    options?: CFormRadioOptions[]
   }[]
 }
 
@@ -55,11 +57,25 @@ const CForm = ({ formFields }: CFormProps) => {
               </React.Fragment>
             )
           case "radio":
-            return (
-              <React.Fragment>
-                <div>RADIO</div>
-              </React.Fragment>
-            )
+            if (formField.options) {
+              return (
+                <React.Fragment>
+                  <div>{formField.label}</div>
+                  {formField.options.map((option) => (
+                    <React.Fragment>
+                      <CLabel id={formField.name}>{option.label}</CLabel>
+                      <CInputField
+                        type={formField.type}
+                        value={option.value}
+                        name={formField.name}
+                        checked={option.checked}
+                      />
+                    </React.Fragment>
+                  ))}
+                </React.Fragment>
+              )
+            }
+            return null
           default:
             return null
         }

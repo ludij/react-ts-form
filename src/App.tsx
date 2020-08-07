@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 import CForm from "./components/CForm"
 
 const formFields = [
@@ -18,8 +18,23 @@ const formFields = [
     type: "radio",
     label: "Income",
     name: "income",
-    value: "",
-    options: []
+    options: [
+      {
+        label: "Option 1",
+        value: "option-1",
+        checked: false,
+      },
+      {
+        label: "Option 2",
+        value: "option-2",
+        checked: false,
+      },
+      {
+        label: "Option 3",
+        value: "option-3",
+        checked: true,
+      },
+    ],
   },
 ]
 
@@ -31,4 +46,4 @@ function App() {
   )
 }
 
-export default App;
+export default App
