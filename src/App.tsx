@@ -1,14 +1,34 @@
 import React from 'react';
-import styled from "@emotion/styled/macro"
+import CForm from "./components/CForm"
 
-const CButton = styled.button(`
-  color: red;
-`)
+const formFields = [
+  {
+    type: "text",
+    label: "First Name",
+    name: "first-name",
+    value: "",
+  },
+  {
+    type: "text",
+    label: "Last Name",
+    name: "last-name",
+    value: "",
+  },
+  {
+    type: "radio",
+    label: "Income",
+    name: "income",
+    value: "",
+    options: []
+  },
+]
 
 function App() {
   return (
-    <CButton>test</CButton>
-  );
+    <div>
+      <CForm formFields={formFields} />
+    </div>
+  )
 }
 
 export default App;
