@@ -24,7 +24,12 @@ const formSections = [
         type: "email",
         name: "email",
         label: "Email address",
-      }
+      },
+      {
+        type: "text",
+        name: "phopne",
+        label: "Phone number",
+      },
     ],
   },
   {
@@ -54,8 +59,8 @@ const formSections = [
 
 const formValues = [
     ['hi', 'no'],
-    [''],
-    ['Option 1']
+    ['', ''],
+    ['No answer provided.']
 ]
 
 function App() {

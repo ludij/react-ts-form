@@ -110,7 +110,6 @@ const CForm = (props: CFormProps) => {
         }
         return null
       })}
-
       <button type="button" onClick={() => setSectionToShow(sectionToShow + 1)}>
         next
       </button>
