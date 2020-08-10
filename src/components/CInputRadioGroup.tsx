@@ -11,6 +11,7 @@ interface CInputRadioGroupProps {
   name: string
   value: string
   options: CFormFieldOptions[]
+  fieldIndex: number
 }
 
 const CInputRadioGroup = (props: CInputRadioGroupProps) => {
@@ -25,9 +26,10 @@ const CInputRadioGroup = (props: CInputRadioGroupProps) => {
               type="radio"
               value={option.value}
               name={props.name}
-              checked={option.value === value}
+              checked={option.label === value}
+              data-field-index={props.fieldIndex}
               onChange={(event) =>
-                event.target.value ? setValue(event.target.value) : null
+                event.target.value ? setValue(option.label) : null
               }
             />
             <CLabel id={props.name}>{option.label}</CLabel>

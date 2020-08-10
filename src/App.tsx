@@ -8,13 +8,11 @@ const formSections = [
       {
         type: "text",
         name: "first-name",
-        value: "hi",
         label: "First Name",
       },
       {
         type: "text",
         name: "last-name",
-        value: "",
         label: "Last Name",
       },
     ]
@@ -25,7 +23,6 @@ const formSections = [
       {
         type: "radioGroup",
         name: "income",
-        value: "option-2",
         options: [
           {
             value: "option-1",
@@ -45,10 +42,15 @@ const formSections = [
   },
 ]
 
+const formValues = [
+    ['hi', 'no'],
+    ['Option 1']
+]
+
 function App() {
   return (
     <React.Fragment>
-      <CForm formSections={formSections} sectionToShow={0} />
+      <CForm formSections={formSections} formValues={formValues} sectionToShow={0} />
     </React.Fragment>
   )
 }

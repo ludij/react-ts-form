@@ -7,6 +7,7 @@ interface CInputProps {
   label: string
   name: string
   value?: string
+  fieldIndex: number
 }
 
 const CInputText = (props : CInputProps) => {
@@ -19,6 +20,7 @@ const CInputText = (props : CInputProps) => {
           type={props.type}
           value={fieldValue}
           name={props.name}
+          data-field-index={props.fieldIndex}
           onChange={event => setFieldValue(event.target.value)}
         />
       </React.Fragment>
