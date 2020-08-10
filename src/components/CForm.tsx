@@ -1,85 +1,83 @@
-import React from "react"
-import styled from "@emotion/styled/macro"
+import React, { useState } from "react"
+import CInputText from "./CInputText"
+import CInputRadioGroup from "./CInputRadioGroup"
+import CErrorMessage from "./CErrorMessage"
 
-const CLabel = styled.label(`
-    display: block;
-    margin-top: 5px;
-    font-family: Arial;
-    font-size: 10px;
-`)
-
-const CInputField = styled.input(`
-    display: block;
-    margin-top: 5px;
-    padding: 15px;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 5px;
-`)
-
-const CErrorMessage = styled.p(`
-    margin: 10px 5px;
-    color: darkred;
-    font-family: Arial;
-`)
-
-interface CFormRadioOptions {
+interface CFormFieldOptions {
   label: string
   value: string
-  checked?: boolean
+}
+
+interface CFormField {
+  type: string
+  label?: string
+  name: string
+  value: string
+  options?: CFormFieldOptions[]
 }
 
 interface CFormProps {
-  formFields: {
-    type: string
-    label: string
-    name: string
-    value?: string
-    options?: CFormRadioOptions[]
+  formSections: {
+    title?: string
+    fields: CFormField[]
   }[]
+  sectionToShow: number
 }
 
-const CForm = ({ formFields }: CFormProps) => {
+const CForm = (props: CFormProps) => {
+  const [sectionToShow, setSectionToShow] = useState(props.sectionToShow || 0)
+
   return (
     <React.Fragment>
-      {formFields.map((formField) => {
-        switch (formField.type) {
-          case "text":
-            return (
-              <React.Fragment>
-                <CLabel id={formField.name}>{formField.label}</CLabel>
-                <CInputField
-                  type={formField.type}
-                  value={formField.value}
-                  name={formField.name}
-                />
-                <CErrorMessage>Error</CErrorMessage>
-              </React.Fragment>
-            )
-          case "radio":
-            if (formField.options) {
-              return (
-                <React.Fragment>
-                  <div>{formField.label}</div>
-                  {formField.options.map((option) => (
-                    <React.Fragment>
-                      <CLabel id={formField.name}>{option.label}</CLabel>
-                      <CInputField
-                        type={formField.type}
-                        value={option.value}
-                        name={formField.name}
-                        checked={option.checked}
-                      />
-                    </React.Fragment>
-                  ))}
-                </React.Fragment>
-              )
-            }
-            return null
-          default:
-            return null
+      {props.formSections.map((section, sectionIndex) => {
+        if (sectionToShow === sectionIndex) {
+          return (
+            <div key={sectionIndex}>
+              {section.title ? <h2>{section.title}</h2> : null}
+              {section.fields.map((formField, index) => {
+                switch (formField.type) {
+                  case "text":
+                    return (
+                      <React.Fragment key={"c-form-field-" + index}>
+                        <CInputText
+                          type={formField.type}
+                          label={formField.label || ""}
+                          name={formField.name}
+                          value={formField.value}
+                        />
+                        <CErrorMessage>Error</CErrorMessage>
+                      </React.Fragment>
+                    )
+                  case "radioGroup":
+                    return (
+                      <React.Fragment key={"c-form-field-" + index}>
+                        <CInputRadioGroup
+                          name={formField.name}
+                          value={formField.value}
+                          options={formField.options || []}
+                        />
+                      </React.Fragment>
+                    )
+                  default:
+                    return null
+                }
+              })}
+            </div>
+          )
         }
+        return null
       })}
+
+      {sectionToShow === props.formSections.length ? (
+        <p>submit</p>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setSectionToShow(sectionToShow + 1)}
+        >
+          next
+        </button>
+      )}
     </React.Fragment>
   )
 }

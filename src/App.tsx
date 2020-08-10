@@ -1,38 +1,45 @@
 import React from "react"
 import CForm from "./components/CForm"
 
-const formFields = [
+const formSections = [
   {
-    type: "text",
-    label: "First Name",
-    name: "first-name",
-    value: "",
-  },
-  {
-    type: "text",
-    label: "Last Name",
-    name: "last-name",
-    value: "",
-  },
-  {
-    type: "radio",
-    label: "Income",
-    name: "income",
-    options: [
+    title: 'name',
+    fields: [
       {
-        label: "Option 1",
-        value: "option-1",
-        checked: false,
+        type: "text",
+        name: "first-name",
+        value: "hi",
+        label: "First Name",
       },
       {
-        label: "Option 2",
+        type: "text",
+        name: "last-name",
+        value: "",
+        label: "Last Name",
+      },
+    ]
+  },
+  {
+    title: 'Income',
+    fields: [
+      {
+        type: "radioGroup",
+        name: "income",
         value: "option-2",
-        checked: false,
-      },
-      {
-        label: "Option 3",
-        value: "option-3",
-        checked: true,
+        options: [
+          {
+            value: "option-1",
+            label: "Option 1",
+          },
+          {
+            value: "option-2",
+            label: "Option 2",
+          },
+          {
+            value: "option-3",
+            label: "Option 3",
+          },
+        ]
       },
     ],
   },
@@ -40,9 +47,9 @@ const formFields = [
 
 function App() {
   return (
-    <div>
-      <CForm formFields={formFields} />
-    </div>
+    <React.Fragment>
+      <CForm formSections={formSections} sectionToShow={0} />
+    </React.Fragment>
   )
 }
 
