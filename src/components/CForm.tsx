@@ -4,16 +4,16 @@ import CInputRadioGroup from "./CInputRadioGroup"
 import CErrorMessage from "./CErrorMessage"
 
 interface CFormFieldOptions {
-  label: string
   value: string
+  label: string
 }
-
 interface CFormField {
   // type: "text" | "radioGroup" /// doesn't work?
   type: string
-  label?: string
   name: string
+  required?: boolean
   options?: CFormFieldOptions[]
+  label?: string
 }
 
 interface CFormSection {
@@ -21,19 +21,28 @@ interface CFormSection {
   fields: CFormField[]
 }
 
+type FormValues = string[][]
+
+interface CFormState {
+  value: string
+  errorMessage?: string
+}
+
 interface CFormProps {
   formSections: CFormSection[]
-  formValues: string[][]
+  formState: CFormState[][]
   sectionToShow: number
 }
 
 const CForm = (props: CFormProps) => {
   const [sectionToShow, setSectionToShow] = useState(props.sectionToShow || 0)
-  const [formValues, setFormValues] = useState(props.formValues)
+  const [formState, setFormState] = useState(props.formState)
 
-  const updateFormValues = (event: any, sectionIndex: number): void => {
+  const updateFormState = (event: any, sectionIndex: number): void => {
+    // event.persist()
     const fieldIndex = event.target.getAttribute("data-field-index")
     const value = event.target.value
+    const validity = event.target.validity
     let newValue = value
     if (event.target.type === "radio") {
       const radioOptions =
@@ -45,21 +54,34 @@ const CForm = (props: CFormProps) => {
         )
       newValue = option && option.label
     }
-    const updatedFormValues = [...formValues]
-    updatedFormValues[sectionIndex][fieldIndex] = newValue
-    console.log("updateFormValues", updatedFormValues)
-    return setFormValues(updatedFormValues)
+
+    let newErrorMessage = ''
+    if (!validity.valid) {
+      if (validity.valueMissing) {
+        newErrorMessage = 'This field is required'
+      }
+      newErrorMessage = 'This field is not valid yet'
+    }
+
+    const updatedFormState = [...formState]
+    updatedFormState[sectionIndex][fieldIndex].value = newValue
+    if (newErrorMessage !== updatedFormState[sectionIndex][fieldIndex].errorMessage) {
+      updatedFormState[sectionIndex][fieldIndex].errorMessage = newErrorMessage
+    }
+    setFormState(updatedFormState)
+    console.log('valid?', validity)
+    return
   }
 
   if (sectionToShow === props.formSections.length) {
     // non-editable confirmation part
     return (
       <div>
-        {formValues.map((section, index) => {
+        {formState.map((section, index) => {
           return (
             <React.Fragment key={index}>
               <p>{props.formSections[index].title}:</p>
-              <p>{section.join(" ")}</p>
+              <p>{section.map(field => field.value).join(" ")}</p>
             </React.Fragment>
           )
         })}
@@ -76,9 +98,9 @@ const CForm = (props: CFormProps) => {
           return (
             <div
               key={sectionIndex}
-              onChange={(event) => updateFormValues(event, sectionIndex)}
+              onChange={(event) => updateFormState(event, sectionIndex)}
             >
-              {section.title ? <h2>{section.title}</h2> : null}
+              {section.title && <h2>{section.title}</h2>}
               {section.fields.map((formField, index) => {
                 if (formField.type === "text" || formField.type === "email") {
                   return (
@@ -87,10 +109,13 @@ const CForm = (props: CFormProps) => {
                         type={formField.type}
                         label={formField.label || ""}
                         name={formField.name}
-                        value={formValues[sectionIndex][index]}
+                        value={formState[sectionIndex][index].value}
+                        required={formField.required}
                         fieldIndex={index}
                       />
-                      <CErrorMessage>Error</CErrorMessage>
+                      <CErrorMessage>
+                        {formState[sectionIndex][index].errorMessage}
+                      </CErrorMessage>
                     </React.Fragment>
                   )
                 }
@@ -98,7 +123,8 @@ const CForm = (props: CFormProps) => {
                   <React.Fragment key={"c-form-field-" + index}>
                     <CInputRadioGroup
                       name={formField.name}
-                      value={formValues[sectionIndex][index]}
+                      value={formState[sectionIndex][index].value}
+                      required={formField.required}
                       options={formField.options || []}
                       fieldIndex={index}
                     />

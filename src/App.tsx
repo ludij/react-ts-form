@@ -9,11 +9,13 @@ const formSections = [
         type: "text",
         name: "first-name",
         label: "First Name",
+        required: true,
       },
       {
         type: "text",
         name: "last-name",
         label: "Last Name",
+        required: true,
       },
     ],
   },
@@ -24,6 +26,7 @@ const formSections = [
         type: "email",
         name: "email",
         label: "Email address",
+        required: true,
       },
       {
         type: "text",
@@ -57,16 +60,38 @@ const formSections = [
   },
 ]
 
-const formValues = [
-    ['hi', 'no'],
-    ['', ''],
-    ['No answer provided.']
+const formState = [
+  [
+    {
+      value: "hi",
+    },
+    {
+      value: "no",
+    },
+  ],
+  [
+    {
+      value: "",
+    },
+    {
+      value: "",
+    },
+  ],
+  [
+    {
+      value: "No answer provided."
+    }
+  ],
 ]
 
 function App() {
   return (
     <React.Fragment>
-      <CForm formSections={formSections} formValues={formValues} sectionToShow={0} />
+      <CForm
+        formSections={formSections}
+        formState={formState}
+        sectionToShow={0}
+      />
     </React.Fragment>
   )
 }

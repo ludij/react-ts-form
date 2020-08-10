@@ -11,6 +11,7 @@ interface CInputRadioGroupProps {
   name: string
   value: string
   options: CFormFieldOptions[]
+  required?: boolean
   fieldIndex: number
 }
 
@@ -27,10 +28,9 @@ const CInputRadioGroup = (props: CInputRadioGroupProps) => {
               value={option.value}
               name={props.name}
               checked={option.label === value}
+              required={props.required}
               data-field-index={props.fieldIndex}
-              onChange={(event) =>
-                event.target.value ? setValue(option.label) : null
-              }
+              onChange={(event) => event.target.value && setValue(option.label)}
             />
             <CLabel id={props.name}>{option.label}</CLabel>
           </React.Fragment>
