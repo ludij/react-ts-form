@@ -3,7 +3,7 @@ import CForm from "./components/CForm"
 
 const formSections = [
   {
-    title: 'name',
+    title: "What is your name?",
     fields: [
       {
         type: "text",
@@ -15,10 +15,20 @@ const formSections = [
         name: "last-name",
         label: "Last Name",
       },
-    ]
+    ],
   },
   {
-    title: 'Income',
+    title: "How can we reach you?",
+    fields: [
+      {
+        type: "email",
+        name: "email",
+        label: "Email address",
+      }
+    ],
+  },
+  {
+    title: "What is the range of your income?",
     fields: [
       {
         type: "radioGroup",
@@ -36,7 +46,7 @@ const formSections = [
             value: "option-3",
             label: "Option 3",
           },
-        ]
+        ],
       },
     ],
   },
@@ -44,6 +54,7 @@ const formSections = [
 
 const formValues = [
     ['hi', 'no'],
+    [''],
     ['Option 1']
 ]
 

@@ -10,7 +10,7 @@ interface CInputProps {
   fieldIndex: number
 }
 
-const CInputText = (props : CInputProps) => {
+const CInputTextAndEmail = (props : CInputProps) => {
     const [fieldValue, setFieldValue] = useState(props.value || "")
 
     return (
@@ -27,4 +27,4 @@ const CInputText = (props : CInputProps) => {
     )
 }
 
-export default CInputText
+export default CInputTextAndEmail

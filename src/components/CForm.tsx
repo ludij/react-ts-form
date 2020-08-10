@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import CInputText from "./CInputText"
+import CInputTextAndEmail from "./CInputTextAndEmail"
 import CInputRadioGroup from "./CInputRadioGroup"
 import CErrorMessage from "./CErrorMessage"
 
@@ -9,6 +9,7 @@ interface CFormFieldOptions {
 }
 
 interface CFormField {
+  // type: "text" | "radioGroup" /// doesn't work?
   type: string
   label?: string
   name: string
@@ -33,15 +34,17 @@ const CForm = (props: CFormProps) => {
   const updateFormValues = (event: any, sectionIndex: number): void => {
     const fieldIndex = event.target.getAttribute("data-field-index")
     const value = event.target.value
-    const radioOptions =
-      props.formSections[sectionIndex].fields[fieldIndex].options
-    const option =
-      radioOptions &&
-      radioOptions.find(
-        (option) => option.value === event.target.value && option.label
-      )
-    const label = option && option.label
-    const newValue = event.target.type === 'text' ? value : label
+    let newValue = value
+    if (event.target.type === "radio") {
+      const radioOptions =
+        props.formSections[sectionIndex].fields[fieldIndex].options
+      const option =
+        radioOptions &&
+        radioOptions.find(
+          (option) => option.value === event.target.value && option.label
+        )
+      newValue = option && option.label
+    }
     const updatedFormValues = [...formValues]
     updatedFormValues[sectionIndex][fieldIndex] = newValue
     console.log("updateFormValues", updatedFormValues)
@@ -77,34 +80,30 @@ const CForm = (props: CFormProps) => {
             >
               {section.title ? <h2>{section.title}</h2> : null}
               {section.fields.map((formField, index) => {
-                switch (formField.type) {
-                  case "text":
-                    return (
-                      <React.Fragment key={"c-form-field-" + index}>
-                        <CInputText
-                          type={formField.type}
-                          label={formField.label || ""}
-                          name={formField.name}
-                          value={formValues[sectionIndex][index]}
-                          fieldIndex={index}
-                        />
-                        <CErrorMessage>Error</CErrorMessage>
-                      </React.Fragment>
-                    )
-                  case "radioGroup":
-                    return (
-                      <React.Fragment key={"c-form-field-" + index}>
-                        <CInputRadioGroup
-                          name={formField.name}
-                          value={formValues[sectionIndex][index]}
-                          options={formField.options || []}
-                          fieldIndex={index}
-                        />
-                      </React.Fragment>
-                    )
-                  default:
-                    return null
+                if (formField.type === "text" || formField.type === "email") {
+                  return (
+                    <React.Fragment key={"c-form-field-" + index}>
+                      <CInputTextAndEmail
+                        type={formField.type}
+                        label={formField.label || ""}
+                        name={formField.name}
+                        value={formValues[sectionIndex][index]}
+                        fieldIndex={index}
+                      />
+                      <CErrorMessage>Error</CErrorMessage>
+                    </React.Fragment>
+                  )
                 }
+                return (
+                  <React.Fragment key={"c-form-field-" + index}>
+                    <CInputRadioGroup
+                      name={formField.name}
+                      value={formValues[sectionIndex][index]}
+                      options={formField.options || []}
+                      fieldIndex={index}
+                    />
+                  </React.Fragment>
+                )
               })}
             </div>
           )
