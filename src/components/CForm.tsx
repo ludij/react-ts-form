@@ -34,42 +34,74 @@ interface CFormProps {
   sectionToShow: number
 }
 
+interface extendedFormState extends CFormState {
+  isPristine: boolean
+  isUntouched: boolean
+}
+
+const extendFormState = (formState: CFormState[][]): extendedFormState[][] => {
+  return formState.map((formSection) =>
+    formSection.map((formField) => {
+      const extendedFormField = {
+        ...formField,
+        isPristine: true,
+        isUntouched: true,
+      }
+      return extendedFormField
+    })
+  )
+}
+
 const CForm = (props: CFormProps) => {
   const [sectionToShow, setSectionToShow] = useState(props.sectionToShow || 0)
-  const [formState, setFormState] = useState(props.formState)
+  const [formState, setFormState] = useState(extendFormState(props.formState))
 
   const updateFormState = (event: any, sectionIndex: number): void => {
-    // event.persist()
+    event.persist()
     const fieldIndex = event.target.getAttribute("data-field-index")
     const value = event.target.value
     const validity = event.target.validity
+
     let newValue = value
-    if (event.target.type === "radio") {
-      const radioOptions =
-        props.formSections[sectionIndex].fields[fieldIndex].options
-      const option =
-        radioOptions &&
-        radioOptions.find(
-          (option) => option.value === event.target.value && option.label
-        )
-      newValue = option && option.label
+    if (event.type === 'change') {
+      if (event.target.type === "radio") {
+        const radioOptions =
+          props.formSections[sectionIndex].fields[fieldIndex].options
+        const option =
+          radioOptions &&
+          radioOptions.find(
+            (option) => option.value === event.target.value && option.label
+          )
+        newValue = option && option.label
+      }
     }
 
-    let newErrorMessage = ''
+    let newErrorMessage = ""
     if (!validity.valid) {
+      newErrorMessage = "This field is not valid yet"
       if (validity.valueMissing) {
-        newErrorMessage = 'This field is required'
+        newErrorMessage = "This field is required"
       }
-      newErrorMessage = 'This field is not valid yet'
     }
 
     const updatedFormState = [...formState]
-    updatedFormState[sectionIndex][fieldIndex].value = newValue
-    if (newErrorMessage !== updatedFormState[sectionIndex][fieldIndex].errorMessage) {
-      updatedFormState[sectionIndex][fieldIndex].errorMessage = newErrorMessage
+    const fieldToUpdate = updatedFormState[sectionIndex][fieldIndex]
+
+    if (event.type === 'blur' && fieldToUpdate.isUntouched) {
+      fieldToUpdate.isUntouched = false
+    }
+    if (newValue !== fieldToUpdate.value) {
+        fieldToUpdate.value = newValue
+      }
+    if (newErrorMessage !== fieldToUpdate.errorMessage) {
+      fieldToUpdate.errorMessage = newErrorMessage
+    }
+    if (fieldToUpdate.isPristine) {
+      fieldToUpdate.isPristine = false
     }
     setFormState(updatedFormState)
-    console.log('valid?', validity)
+    console.log("valid?", validity)
+    console.log("updatedFormState", updatedFormState)
     return
   }
 
@@ -81,7 +113,7 @@ const CForm = (props: CFormProps) => {
           return (
             <React.Fragment key={index}>
               <p>{props.formSections[index].title}:</p>
-              <p>{section.map(field => field.value).join(" ")}</p>
+              <p>{section.map((field) => field.value).join(" ")}</p>
             </React.Fragment>
           )
         })}
@@ -99,6 +131,7 @@ const CForm = (props: CFormProps) => {
             <div
               key={sectionIndex}
               onChange={(event) => updateFormState(event, sectionIndex)}
+              onBlur={(event) => updateFormState(event, sectionIndex)}
             >
               {section.title && <h2>{section.title}</h2>}
               {section.fields.map((formField, index) => {
@@ -114,7 +147,8 @@ const CForm = (props: CFormProps) => {
                         fieldIndex={index}
                       />
                       <CErrorMessage>
-                        {formState[sectionIndex][index].errorMessage}
+                        {!formState[sectionIndex][index].isUntouched &&
+                          formState[sectionIndex][index].errorMessage}
                       </CErrorMessage>
                     </React.Fragment>
                   )
