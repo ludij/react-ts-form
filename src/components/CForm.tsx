@@ -12,6 +12,7 @@ interface CFormField {
   type: string
   name: string
   required?: boolean
+  pattern?: string
   options?: CFormFieldOptions[]
   label?: string
 }
@@ -21,11 +22,9 @@ interface CFormSection {
   fields: CFormField[]
 }
 
-type FormValues = string[][]
-
 interface CFormState {
   value: string
-  errorMessage?: string
+  defaultInvalidMessage?: string
 }
 
 interface CFormProps {
@@ -35,24 +34,32 @@ interface CFormProps {
 }
 
 interface extendedFormState extends CFormState {
+  errorMessage: string
   isPristine: boolean
   isUntouched: boolean
-}
-
-const extendFormState = (formState: CFormState[][]): extendedFormState[][] => {
-  return formState.map((formSection) =>
-    formSection.map((formField) => {
-      const extendedFormField = {
-        ...formField,
-        isPristine: true,
-        isUntouched: true,
-      }
-      return extendedFormField
-    })
-  )
+  isRequired: boolean
 }
 
 const CForm = (props: CFormProps) => {
+  const extendFormState = (
+    formState: CFormState[][]
+  ): extendedFormState[][] => {
+    return formState.map((formSection, sectionIndex) =>
+      formSection.map((formField, fieldIndex) => {
+        const extendedFormField = {
+          ...formField,
+          errorMessage: "",
+          isPristine: true,
+          isUntouched: true,
+          isRequired:
+            props.formSections[sectionIndex].fields[fieldIndex].required ||
+            false,
+        }
+        return extendedFormField
+      })
+    )
+  }
+
   const [sectionToShow, setSectionToShow] = useState(props.sectionToShow || 0)
   const [formState, setFormState] = useState(extendFormState(props.formState))
 
@@ -63,7 +70,7 @@ const CForm = (props: CFormProps) => {
     const validity = event.target.validity
 
     let newValue = value
-    if (event.type === 'change') {
+    if (event.type === "change") {
       if (event.target.type === "radio") {
         const radioOptions =
           props.formSections[sectionIndex].fields[fieldIndex].options
@@ -78,7 +85,9 @@ const CForm = (props: CFormProps) => {
 
     let newErrorMessage = ""
     if (!validity.valid) {
-      newErrorMessage = "This field is not valid yet"
+      newErrorMessage =
+        formState[sectionIndex][fieldIndex].defaultInvalidMessage ||
+        "This field is not valid yet"
       if (validity.valueMissing) {
         newErrorMessage = "This field is required"
       }
@@ -87,12 +96,12 @@ const CForm = (props: CFormProps) => {
     const updatedFormState = [...formState]
     const fieldToUpdate = updatedFormState[sectionIndex][fieldIndex]
 
-    if (event.type === 'blur' && fieldToUpdate.isUntouched) {
+    if (event.type === "blur" && fieldToUpdate.isUntouched) {
       fieldToUpdate.isUntouched = false
     }
     if (newValue !== fieldToUpdate.value) {
-        fieldToUpdate.value = newValue
-      }
+      fieldToUpdate.value = newValue
+    }
     if (newErrorMessage !== fieldToUpdate.errorMessage) {
       fieldToUpdate.errorMessage = newErrorMessage
     }
@@ -103,6 +112,21 @@ const CForm = (props: CFormProps) => {
     console.log("valid?", validity)
     console.log("updatedFormState", updatedFormState)
     return
+  }
+
+  const isButtonDisabled = (): boolean => {
+    const someMissing = formState[sectionToShow].some(
+      (formField) =>
+        (formField.isPristine || !formField.value.length) &&
+        formField.isRequired
+    )
+    if (someMissing) {
+      return someMissing
+    }
+    const someErrorMessageLenght = formState[sectionToShow].some(
+      (formField) => formField.errorMessage.length
+    )
+    return someErrorMessageLenght
   }
 
   if (sectionToShow === props.formSections.length) {
@@ -144,12 +168,17 @@ const CForm = (props: CFormProps) => {
                         name={formField.name}
                         value={formState[sectionIndex][index].value}
                         required={formField.required}
+                        pattern={formField.pattern}
                         fieldIndex={index}
                       />
-                      <CErrorMessage>
-                        {!formState[sectionIndex][index].isUntouched &&
-                          formState[sectionIndex][index].errorMessage}
-                      </CErrorMessage>
+                      <CErrorMessage
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            (!formState[sectionIndex][index].isUntouched &&
+                              formState[sectionIndex][index].errorMessage) ||
+                            "",
+                        }}
+                      />
                     </React.Fragment>
                   )
                 }
@@ -162,6 +191,14 @@ const CForm = (props: CFormProps) => {
                       options={formField.options || []}
                       fieldIndex={index}
                     />
+                    <CErrorMessage
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          (!formState[sectionIndex][index].isUntouched &&
+                            formState[sectionIndex][index].errorMessage) ||
+                          "",
+                      }}
+                    />
                   </React.Fragment>
                 )
               })}
@@ -170,7 +207,11 @@ const CForm = (props: CFormProps) => {
         }
         return null
       })}
-      <button type="button" onClick={() => setSectionToShow(sectionToShow + 1)}>
+      <button
+        disabled={isButtonDisabled()}
+        type="button"
+        onClick={() => setSectionToShow(sectionToShow + 1)}
+      >
         next
       </button>
     </React.Fragment>

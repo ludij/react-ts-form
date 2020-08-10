@@ -32,6 +32,7 @@ const formSections = [
         type: "text",
         name: "phopne",
         label: "Phone number",
+        pattern: "[0-9]{0,14}$",
       },
     ],
   },
@@ -61,27 +62,20 @@ const formSections = [
 ]
 
 const formState = [
-  [
-    {
-      value: "hi",
-    },
-    {
-      value: "no",
-    },
-  ],
+  [{ value: "" }, { value: "" }],
   [
     {
       value: "",
+      defaultInvalidMessage:
+        "This field is not valid yet.<br />Please enter an address in the format 'email@address.com'.",
     },
     {
       value: "",
+      defaultInvalidMessage:
+        "This field is not valid yet.<br />Please enter a number in the format '004912345678'.",
     },
   ],
-  [
-    {
-      value: "No answer provided."
-    }
-  ],
+  [{ value: "No answer provided." }],
 ]
 
 function App() {

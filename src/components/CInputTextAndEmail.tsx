@@ -7,6 +7,7 @@ interface CInputProps {
   label: string
   name: string
   required?: boolean
+  pattern?: string
   value?: string
   fieldIndex: number
 }
@@ -24,6 +25,7 @@ const CInputTextAndEmail = (props : CInputProps) => {
           value={fieldValue}
           name={props.name}
           required={props.required}
+          pattern={props.pattern}
           data-field-index={props.fieldIndex}
           onChange={(event) => setFieldValue(event.target.value)}
         />
