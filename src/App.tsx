@@ -39,23 +39,31 @@ const formSections = [
     ],
   },
   {
-    title: "What is the range of your income?",
+    title: "What is your monthly income?",
     fields: [
       {
         type: "radioGroup",
         name: "income",
         options: [
           {
-            value: "option-1",
-            label: "Option 1",
+            value: "0-1000",
+            label: "0 - 1.000 Euro",
           },
           {
-            value: "option-2",
-            label: "Option 2",
+            value: "2000-3000",
+            label: "1.000 - 2.000 Euro",
           },
           {
-            value: "option-3",
-            label: "Option 3",
+            value: "3000-4000",
+            label: "2.000 - 3.000 Euro",
+          },
+          {
+            value: "3000-4000",
+            label: "3.000 - 4.000 Euro",
+          },
+          {
+            value: "4000+",
+            label: "More than 4.000 Euro",
           },
         ],
       },
@@ -77,7 +85,7 @@ const formState = [
         "This field is not valid yet.<br />Please enter a number in the format '004912345678'.",
     },
   ],
-  [{ value: "No answer provided." }],
+  [{ value: "No answer given" }],
 ]
 
 function App() {

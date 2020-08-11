@@ -4,7 +4,7 @@ const CLabel = styled.label(`
     display: block;
     margin-top: 5px;
     font-family: Arial;
-    font-size: 10px;
+    font-size: 12px;
 `)
 
 export default CLabel

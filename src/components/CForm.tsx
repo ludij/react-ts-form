@@ -4,6 +4,7 @@ import CInputTextAndEmail from "./CInputTextAndEmail"
 import CInputRadioGroup from "./CInputRadioGroup"
 import CErrorMessage from "./CErrorMessage"
 import CFooter from "./CFooter"
+import CFormProgress from "./CFormProgress"
 import CButton from "./CButton"
 
 interface CFormFieldOptions {
@@ -63,9 +64,6 @@ const CForm = (props: CFormProps) => {
     )
   }
 
-  const [sectionToShow, setSectionToShow] = useState(props.sectionToShow || 0)
-  const [formState, setFormState] = useState(extendFormState(props.formState))
-
   const updateFormState = (event: any, sectionIndex: number): void => {
     event.persist()
     const fieldIndex = event.target.getAttribute("data-field-index")
@@ -112,8 +110,6 @@ const CForm = (props: CFormProps) => {
       fieldToUpdate.isPristine = false
     }
     setFormState(updatedFormState)
-    console.log("valid?", validity)
-    console.log("updatedFormState", updatedFormState)
     return
   }
 
@@ -122,6 +118,9 @@ const CForm = (props: CFormProps) => {
   }
 
   const isNextButtonDisabled = (): boolean => {
+    if (sectionToShow >= props.formSections.length) {
+      return true
+    }
     const someMissing = formState[sectionToShow].some(
       (formField) =>
         (formField.isPristine || !formField.value.length) &&
@@ -136,25 +135,57 @@ const CForm = (props: CFormProps) => {
     return someErrorMessageLength
   }
 
-  if (sectionToShow === props.formSections.length) {
-    // non-editable confirmation part
-    return (
-      <React.Fragment>
-        {formState.map((section, index) => {
-          return (
-            <React.Fragment key={index}>
-              <p>{props.formSections[index].title}:</p>
-              <p>{section.map((field) => field.value).join(" ")}</p>
-            </React.Fragment>
-          )
-        })}
-        <p>submit</p>
-      </React.Fragment>
-    )
-  }
+  const [sectionToShow, setSectionToShow] = useState(props.sectionToShow || 0)
+  const [formState, setFormState] = useState(extendFormState(props.formState))
 
-  // editable sections
-  return (
+  const footer = (
+    <CFooter>
+      <CFormProgress
+        value={sectionToShow + 1}
+        max={props.formSections.length + 1}
+      />
+      <CButton
+        disabled={isPreviousButtonDisabled()}
+        type="button"
+        onClick={() => setSectionToShow(sectionToShow - 1)}
+      >
+        ⭠
+      </CButton>
+      <p>
+        {sectionToShow + 1} of {props.formSections.length + 1}
+      </p>
+      <CButton
+        disabled={isNextButtonDisabled()}
+        type="button"
+        onClick={() => setSectionToShow(sectionToShow + 1)}
+      >
+        ⭢
+      </CButton>
+    </CFooter>
+  )
+
+  const formSummary = (
+    <React.Fragment>
+      {formState.map((section, index) => (
+        <React.Fragment key={index}>
+          <p>
+            {props.formSections[index].title} <br />
+            {section.map((field, fieldIndex) => (
+                <React.Fragment key={"field" + fieldIndex}>
+                  {field.value}
+                  {fieldIndex < section.length && field.value.length ? <br /> : null}
+                </React.Fragment>
+              )
+            )}
+          </p>
+        </React.Fragment>
+      ))}
+      <p>submit</p>
+      {footer}
+    </React.Fragment>
+  )
+
+  const formSection = (
     <React.Fragment>
       {props.formSections.map((section, sectionIndex) => {
         if (sectionToShow === sectionIndex) {
@@ -214,24 +245,11 @@ const CForm = (props: CFormProps) => {
         }
         return null
       })}
-      <CFooter>
-        <CButton
-          disabled={isPreviousButtonDisabled()}
-          type="button"
-          onClick={() => setSectionToShow(sectionToShow - 1)}
-        >
-          ⭠
-        </CButton>
-        <CButton
-          disabled={isNextButtonDisabled()}
-          type="button"
-          onClick={() => setSectionToShow(sectionToShow + 1)}
-        >
-          ⭢
-        </CButton>
-      </CFooter>
+      {footer}
     </React.Fragment>
   )
+
+  return sectionToShow === props.formSections.length ? formSummary : formSection
 }
 
 export default CForm

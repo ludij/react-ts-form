@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import CLabel from "./CLabel"
+import CInputRadioWrapper from "./CInputRadioWrapper"
 import CInputField from "./CInputField"
 
 interface CFormFieldOptions {
@@ -22,7 +23,7 @@ const CInputRadioGroup = (props: CInputRadioGroupProps) => {
     <React.Fragment>
       {props.options.map((option, index) => {
         return (
-          <React.Fragment key={index}>
+          <CInputRadioWrapper key={index}>
             <CInputField
               type="radio"
               value={option.value}
@@ -33,7 +34,7 @@ const CInputRadioGroup = (props: CInputRadioGroupProps) => {
               onChange={(event) => event.target.value && setValue(option.label)}
             />
             <CLabel id={props.name}>{option.label}</CLabel>
-          </React.Fragment>
+          </CInputRadioWrapper>
         )
       })}
     </React.Fragment>

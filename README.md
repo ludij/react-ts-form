@@ -1,5 +1,11 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Install packages
+
+Before you can run the scripts, you have to start the packages with:
+
+### `yarn`
+
 ## Available Scripts
 
 In the project directory, you can run:

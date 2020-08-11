@@ -12,6 +12,7 @@ const CButton = styled.button(`
 
     &[disabled] {
         cursor: not-allowed;
+        color: rgb(200, 200, 200);
     }
 `)
 

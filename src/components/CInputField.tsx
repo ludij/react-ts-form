@@ -4,7 +4,6 @@ const CInputField = styled.input(`
     display: block;
     margin-top: 5px;
     padding: 15px;
-    background: rgb(240, 240, 240);
     background: linear-gradient(
         230deg,
         rgba(240, 240, 240, 1) 0%,
@@ -13,7 +12,6 @@ const CInputField = styled.input(`
     );
     border: none;
     border-radius: 5px;
-    width: 100%;
 `)
 
 export default CInputField
