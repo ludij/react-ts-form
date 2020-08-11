@@ -2,7 +2,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Install packages
 
-Before you can run the scripts, you have to start the packages with:
+Before you can run the scripts, you have to install the packages with:
 
 ### `yarn`
 
