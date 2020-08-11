@@ -1,7 +1,10 @@
 import React, { useState } from "react"
+import CFormSection from "./CFormSection"
 import CInputTextAndEmail from "./CInputTextAndEmail"
 import CInputRadioGroup from "./CInputRadioGroup"
 import CErrorMessage from "./CErrorMessage"
+import CFooter from "./CFooter"
+import CButton from "./CButton"
 
 interface CFormFieldOptions {
   value: string
@@ -114,7 +117,11 @@ const CForm = (props: CFormProps) => {
     return
   }
 
-  const isButtonDisabled = (): boolean => {
+  const isPreviousButtonDisabled = (): boolean => {
+    return sectionToShow < 1
+  }
+
+  const isNextButtonDisabled = (): boolean => {
     const someMissing = formState[sectionToShow].some(
       (formField) =>
         (formField.isPristine || !formField.value.length) &&
@@ -132,7 +139,7 @@ const CForm = (props: CFormProps) => {
   if (sectionToShow === props.formSections.length) {
     // non-editable confirmation part
     return (
-      <div>
+      <React.Fragment>
         {formState.map((section, index) => {
           return (
             <React.Fragment key={index}>
@@ -142,7 +149,7 @@ const CForm = (props: CFormProps) => {
           )
         })}
         <p>submit</p>
-      </div>
+      </React.Fragment>
     )
   }
 
@@ -152,7 +159,7 @@ const CForm = (props: CFormProps) => {
       {props.formSections.map((section, sectionIndex) => {
         if (sectionToShow === sectionIndex) {
           return (
-            <div
+            <CFormSection
               key={sectionIndex}
               onChange={(event) => updateFormState(event, sectionIndex)}
               onBlur={(event) => updateFormState(event, sectionIndex)}
@@ -202,18 +209,27 @@ const CForm = (props: CFormProps) => {
                   </React.Fragment>
                 )
               })}
-            </div>
+            </CFormSection>
           )
         }
         return null
       })}
-      <button
-        disabled={isButtonDisabled()}
-        type="button"
-        onClick={() => setSectionToShow(sectionToShow + 1)}
-      >
-        next
-      </button>
+      <CFooter>
+        <CButton
+          disabled={isPreviousButtonDisabled()}
+          type="button"
+          onClick={() => setSectionToShow(sectionToShow - 1)}
+        >
+          ⭠
+        </CButton>
+        <CButton
+          disabled={isNextButtonDisabled()}
+          type="button"
+          onClick={() => setSectionToShow(sectionToShow + 1)}
+        >
+          ⭢
+        </CButton>
+      </CFooter>
     </React.Fragment>
   )
 }

@@ -13,6 +13,7 @@ const CInputField = styled.input(`
     );
     border: none;
     border-radius: 5px;
+    width: 100%;
 `)
 
 export default CInputField
