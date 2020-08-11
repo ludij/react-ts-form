@@ -1,5 +1,7 @@
 import React from "react"
+import CTitle from './components/CTitle'
 import CForm from "./components/CForm"
+import "./styles/styles.css"
 
 const formSections = [
   {
@@ -81,6 +83,7 @@ const formState = [
 function App() {
   return (
     <React.Fragment>
+      <CTitle>React TS Form</CTitle>
       <CForm
         formSections={formSections}
         formState={formState}

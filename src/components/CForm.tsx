@@ -123,10 +123,10 @@ const CForm = (props: CFormProps) => {
     if (someMissing) {
       return someMissing
     }
-    const someErrorMessageLenght = formState[sectionToShow].some(
+    const someErrorMessageLength = formState[sectionToShow].some(
       (formField) => formField.errorMessage.length
     )
-    return someErrorMessageLenght
+    return someErrorMessageLength
   }
 
   if (sectionToShow === props.formSections.length) {

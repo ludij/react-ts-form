@@ -8,8 +8,8 @@ interface CFormFieldOptions {
 }
 
 interface CInputRadioGroupProps {
-  name: string
   value: string
+  name: string
   options: CFormFieldOptions[]
   required?: boolean
   fieldIndex: number

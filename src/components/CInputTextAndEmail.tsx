@@ -18,7 +18,7 @@ const CInputTextAndEmail = (props : CInputProps) => {
     return (
       <React.Fragment>
         <CLabel id={props.name}>
-          {props.label} {props.required && '*'}
+          {props.label} {props.required && "*"}
         </CLabel>
         <CInputField
           type={props.type}
