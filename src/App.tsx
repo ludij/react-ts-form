@@ -27,13 +27,13 @@ const formSections = [
       {
         type: "email",
         name: "email",
-        label: "Email address",
+        label: "Email Address",
         required: true,
       },
       {
         type: "text",
         name: "phopne",
-        label: "Phone number",
+        label: "Phone Number",
         pattern: "[0-9]{0,14}$",
       },
     ],

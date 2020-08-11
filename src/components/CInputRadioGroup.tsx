@@ -31,9 +31,11 @@ const CInputRadioGroup = (props: CInputRadioGroupProps) => {
               checked={option.label === value}
               required={props.required}
               data-field-index={props.fieldIndex}
-              onChange={(event) => event.target.value && setValue(option.label)}
+              onChange={() => setValue(option.label)}
             />
-            <CLabel id={props.name}>{option.label}</CLabel>
+            <CLabel id={props.name} onClick={() => setValue(option.label)}>
+              {option.label}
+            </CLabel>
           </CInputRadioWrapper>
         )
       })}

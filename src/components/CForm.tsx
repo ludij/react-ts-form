@@ -65,23 +65,20 @@ const CForm = (props: CFormProps) => {
   }
 
   const updateFormState = (event: any, sectionIndex: number): void => {
-    event.persist()
     const fieldIndex = event.target.getAttribute("data-field-index")
     const value = event.target.value
     const validity = event.target.validity
 
     let newValue = value
-    if (event.type === "change") {
-      if (event.target.type === "radio") {
-        const radioOptions =
-          props.formSections[sectionIndex].fields[fieldIndex].options
-        const option =
-          radioOptions &&
-          radioOptions.find(
-            (option) => option.value === event.target.value && option.label
-          )
-        newValue = option && option.label
-      }
+    if (event.target.type === "radio") {
+      const radioOptions =
+        props.formSections[sectionIndex].fields[fieldIndex].options
+      const option =
+        radioOptions &&
+        radioOptions.find(
+          (option) => option.value === event.target.value && option.label
+        )
+      newValue = option && option.label
     }
 
     let newErrorMessage = ""
@@ -171,12 +168,13 @@ const CForm = (props: CFormProps) => {
           <p>
             {props.formSections[index].title} <br />
             {section.map((field, fieldIndex) => (
-                <React.Fragment key={"field" + fieldIndex}>
-                  {field.value}
-                  {fieldIndex < section.length && field.value.length ? <br /> : null}
-                </React.Fragment>
-              )
-            )}
+              <React.Fragment key={"field" + fieldIndex}>
+                {field.value}
+                {fieldIndex < section.length && field.value.length ? (
+                  <br />
+                ) : null}
+              </React.Fragment>
+            ))}
           </p>
         </React.Fragment>
       ))}
