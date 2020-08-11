@@ -1,5 +1,6 @@
 {
   "name": "react-ts-form",
+  "author": "Luutzen Dijkstra <luutzen.dijkstra@gmail.com> (https://github.com/ludij)",
   "version": "0.1.0",
   "private": true,
   "scripts": {
